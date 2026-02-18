@@ -20,6 +20,7 @@ export interface LICPlan {
   planNo: number
   name: string
   type: PlanType
+  versionTag?: string
   minAge: number
   maxAge: number
   minTerm: number
