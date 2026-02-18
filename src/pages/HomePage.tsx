@@ -77,9 +77,9 @@ export const HomePage = () => {
             View all <ArrowRight size={12} className='inline' />
           </Link>
         </div>
-        <div className='flex gap-3 overflow-x-auto pb-1'>
+        <div className='no-scrollbar -mx-1 flex snap-x snap-mandatory gap-3 overflow-x-auto px-1 pb-1 [scrollbar-gutter:stable] [touch-action:pan-x]'>
           {trending.map((plan) => (
-            <Card key={plan.planNo} variant='interactive' className='min-w-[240px] shrink-0'>
+            <Card key={plan.planNo} variant='interactive' className='min-w-[82%] snap-start shrink-0 sm:min-w-[300px]'>
               <p className='text-[11px] font-semibold uppercase tracking-wide text-[var(--text-tertiary)]'>Plan {plan.planNo}</p>
               <h3 className='text-base font-semibold'>{plan.name}</h3>
               <p className='mt-1 text-xs text-[var(--text-secondary)]'>{plan.description}</p>
