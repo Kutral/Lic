@@ -52,6 +52,7 @@ export const ResultCard = () => {
     const text = [
       header,
       `${selectedPlan.name} (${selectedPlan.planNo})`,
+      `Age: ${result.age} years`,
       `Total Premium: ${formatCurrencyINR(result.totalPremiumByMode)}`,
       `Maturity: ${formatCurrencyINR(result.maturityEstimate)}`,
       clientLine,
@@ -87,6 +88,7 @@ export const ResultCard = () => {
         </motion.h3>
 
         <dl className='grid grid-cols-1 gap-2 sm:grid-cols-2'>
+          <Metric label='Age' value={`${result.age} years`} />
           <Metric label='Base Premium' value={formatCurrencyINR(result.baseAnnualPremium)} />
           <Metric label='Rider Premium' value={formatCurrencyINR(result.riderPremiumAnnual)} />
           <Metric label='GST' value={`${formatCurrencyINR(result.gstAmount)} (${(result.gstRate * 100).toFixed(2)}%)`} />
