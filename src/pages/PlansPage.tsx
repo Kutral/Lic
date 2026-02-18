@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { PageWrapper } from '../components/layout/PageWrapper'
 import { PlanCard } from '../components/plans/PlanCard'
 import { Input } from '../components/ui/Input'
@@ -41,7 +42,9 @@ export const PlansPage = () => {
       {filteredPlans.length ? (
         <div className='grid gap-3 md:grid-cols-2 xl:grid-cols-3'>
           {filteredPlans.map((plan) => (
-            <PlanCard key={plan.planNo} plan={plan} />
+            <Link key={plan.planNo} to={`/calculator?plan=${plan.planNo}`} className='block'>
+              <PlanCard plan={plan} />
+            </Link>
           ))}
         </div>
       ) : (

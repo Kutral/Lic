@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { ClientForm } from '../components/clients/ClientForm'
 import { PageWrapper } from '../components/layout/PageWrapper'
 import { PremiumForm } from '../components/calculator/PremiumForm'
@@ -8,17 +9,35 @@ import { Card } from '../components/ui/Card'
 import { useCalculator } from '../hooks/useCalculator'
 import { useClientStore } from '../store/clientStore'
 import { useUIStore } from '../store/uiStore'
+import { plans } from '../data/plans'
 
 export const CalculatorPage = () => {
-  const { selectedClientId, setSelectedClientId } = useCalculator()
+  const { draft, selectedClientId, setDraft, setSelectedClientId } = useCalculator()
   const { clients, addClient, loadClients } = useClientStore()
   const { showToast } = useUIStore()
   const [useClientWorkspace, setUseClientWorkspace] = useState(false)
   const [showAddClientForm, setShowAddClientForm] = useState(false)
+  const [searchParams] = useSearchParams()
 
   useEffect(() => {
     void loadClients()
   }, [loadClients])
+
+  useEffect(() => {
+    const planParam = Number(searchParams.get('plan'))
+    if (!Number.isFinite(planParam)) return
+    if (draft.planNo === planParam) return
+
+    const plan = plans.find((item) => item.planNo === planParam)
+    if (!plan) return
+
+    setDraft({
+      planNo: plan.planNo,
+      policyTerm: plan.minTerm,
+      premiumPayingTerm: Math.min(plan.minTerm, 16),
+      sumAssured: Math.max(plan.minSA, draft.sumAssured),
+    })
+  }, [searchParams, draft.planNo, draft.sumAssured, setDraft])
 
   return (
     <PageWrapper title='Premium Calculator' subtitle='Design a quote with riders, mode rebates, and instant maturity/death projection.' eyebrow='Core Engine'>
