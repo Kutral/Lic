@@ -1,5 +1,5 @@
 ﻿import { useMemo, useState } from 'react'
-import { Calculator, CalendarClock, ChevronDown, CircleDollarSign, Search, ShieldPlus } from 'lucide-react'
+import { Calculator, CalendarClock, ChevronDown, CircleDollarSign, Search, ShieldPlus, UserRound } from 'lucide-react'
 import { plans } from '../../data/plans'
 import { useCalculator } from '../../hooks/useCalculator'
 import type { LICPlan } from '../../types'
@@ -12,12 +12,22 @@ export const PremiumForm = () => {
   const { draft, selectedPlan, error, setDraft, runCalculation } = useCalculator()
   const [planSearch, setPlanSearch] = useState('')
   const [isPlanPickerOpen, setPlanPickerOpen] = useState(false)
+  const [sumAssuredInput, setSumAssuredInput] = useState(String(draft.sumAssured))
+  const [policyTermInput, setPolicyTermInput] = useState(String(draft.policyTerm))
+  const [pptInput, setPptInput] = useState(String(draft.premiumPayingTerm))
+  const [ageInput, setAgeInput] = useState(draft.manualAge ? String(draft.manualAge) : '')
 
   const filteredPlans = useMemo(() => {
     const q = planSearch.trim().toLowerCase()
     if (!q) return plans
     return plans.filter((plan) => plan.name.toLowerCase().includes(q) || String(plan.planNo).includes(q))
   }, [planSearch])
+
+  const toNumber = (value: string) => {
+    const normalized = value.replace(/[^\d]/g, '')
+    if (!normalized) return Number.NaN
+    return Number(normalized)
+  }
 
   const applyPlan = (plan: LICPlan) => {
     setDraft({
@@ -26,6 +36,9 @@ export const PremiumForm = () => {
       premiumPayingTerm: Math.min(plan.minTerm, 16),
       sumAssured: Math.max(plan.minSA, draft.sumAssured),
     })
+    setPolicyTermInput(String(plan.minTerm))
+    setPptInput(String(Math.min(plan.minTerm, 16)))
+    setSumAssuredInput(String(Math.max(plan.minSA, draft.sumAssured)))
     setPlanPickerOpen(false)
     setPlanSearch('')
   }
@@ -83,14 +96,43 @@ export const PremiumForm = () => {
       </div>
 
       <div className='grid gap-4 md:grid-cols-2'>
-        <Input label='Date of Birth' type='date' value={draft.dateOfBirth} onChange={(event) => setDraft({ dateOfBirth: event.target.value })} leading={<CalendarClock size={14} />} />
+        <div className='space-y-2'>
+          <label className='text-xs font-semibold uppercase tracking-wide text-[var(--text-tertiary)]'>Quote By</label>
+          <SegmentedControl
+            value={draft.quoteBy ?? 'dob'}
+            onChange={(mode) => setDraft({ quoteBy: mode })}
+            options={[
+              { value: 'dob', label: 'DOB' },
+              { value: 'age', label: 'Age' },
+            ]}
+          />
+          {(draft.quoteBy ?? 'dob') === 'dob' ? (
+            <Input label='Date of Birth' type='date' value={draft.dateOfBirth} onChange={(event) => setDraft({ dateOfBirth: event.target.value })} leading={<CalendarClock size={14} />} />
+          ) : (
+            <Input
+              label='Age'
+              type='text'
+              inputMode='numeric'
+              value={ageInput}
+              onChange={(event) => {
+                setAgeInput(event.target.value)
+                setDraft({ manualAge: toNumber(event.target.value) })
+              }}
+              leading={<UserRound size={14} />}
+              placeholder='Enter age in years'
+            />
+          )}
+        </div>
+
         <Input
           label='Sum Assured'
-          type='number'
-          min={selectedPlan?.minSA}
-          max={selectedPlan?.maxSA}
-          value={draft.sumAssured}
-          onChange={(event) => setDraft({ sumAssured: Number(event.target.value || 0) })}
+          type='text'
+          inputMode='numeric'
+          value={sumAssuredInput}
+          onChange={(event) => {
+            setSumAssuredInput(event.target.value)
+            setDraft({ sumAssured: toNumber(event.target.value) })
+          }}
           leading='INR'
           helperText={selectedPlan ? `Allowed: INR ${selectedPlan.minSA.toLocaleString('en-IN')} to ${selectedPlan.maxSA.toLocaleString('en-IN')}` : ''}
         />
@@ -99,20 +141,24 @@ export const PremiumForm = () => {
       <div className='grid gap-4 md:grid-cols-2'>
         <Input
           label='Policy Term'
-          type='number'
-          min={selectedPlan?.minTerm}
-          max={selectedPlan?.maxTerm}
-          value={draft.policyTerm}
-          onChange={(event) => setDraft({ policyTerm: Number(event.target.value || 0) })}
+          type='text'
+          inputMode='numeric'
+          value={policyTermInput}
+          onChange={(event) => {
+            setPolicyTermInput(event.target.value)
+            setDraft({ policyTerm: toNumber(event.target.value) })
+          }}
           leading={<CircleDollarSign size={14} />}
         />
         <Input
           label='Premium Paying Term'
-          type='number'
-          min={1}
-          max={draft.policyTerm}
-          value={draft.premiumPayingTerm}
-          onChange={(event) => setDraft({ premiumPayingTerm: Number(event.target.value || 0) })}
+          type='text'
+          inputMode='numeric'
+          value={pptInput}
+          onChange={(event) => {
+            setPptInput(event.target.value)
+            setDraft({ premiumPayingTerm: toNumber(event.target.value) })
+          }}
           leading={<CircleDollarSign size={14} />}
         />
       </div>

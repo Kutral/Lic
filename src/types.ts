@@ -46,6 +46,8 @@ export interface LICPlan {
 export interface CalculatorInput {
   planNo: number
   dateOfBirth: string
+  quoteBy?: 'dob' | 'age'
+  manualAge?: number | null
   sumAssured: number
   policyTerm: number
   premiumPayingTerm: number

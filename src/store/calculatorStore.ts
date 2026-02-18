@@ -17,6 +17,8 @@ interface CalculatorState {
 const defaultDraft: CalculatorInput = {
   planNo: 736,
   dateOfBirth: '1995-01-01',
+  quoteBy: 'dob',
+  manualAge: null,
   sumAssured: 1000000,
   policyTerm: 21,
   premiumPayingTerm: 16,

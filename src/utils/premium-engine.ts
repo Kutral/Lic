@@ -69,15 +69,31 @@ export const calculatePremium = (
   input: CalculatorInput,
   quoteDate = new Date().toISOString().slice(0, 10),
 ): PremiumBreakdown => {
+  if (!Number.isFinite(input.sumAssured) || input.sumAssured <= 0) {
+    throw new Error('Enter a valid sum assured amount.')
+  }
+  if (!Number.isFinite(input.policyTerm) || input.policyTerm <= 0) {
+    throw new Error('Enter a valid policy term.')
+  }
+  if (!Number.isFinite(input.premiumPayingTerm) || input.premiumPayingTerm <= 0) {
+    throw new Error('Enter a valid premium paying term.')
+  }
+
   const plan = planMap.get(input.planNo)
   if (!plan) {
     throw new Error('Plan not found')
   }
 
   const age =
-    input.ageMode === 'nearest'
-      ? getAgeNearestBirthday(input.dateOfBirth)
-      : getAgeLastBirthday(input.dateOfBirth)
+    input.quoteBy === 'age'
+      ? Math.floor(input.manualAge ?? Number.NaN)
+      : input.ageMode === 'nearest'
+        ? getAgeNearestBirthday(input.dateOfBirth)
+        : getAgeLastBirthday(input.dateOfBirth)
+
+  if (!Number.isFinite(age) || age < 0) {
+    throw new Error('Enter a valid age or date of birth.')
+  }
 
   if (age < plan.minAge || age > plan.maxAge) {
     throw new Error(`Age ${age} is outside eligibility for ${plan.name}`)
