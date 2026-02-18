@@ -1,18 +1,17 @@
 import { NavLink } from 'react-router-dom'
-import { Calculator, Home, MessageSquareText, Settings, Sparkles, UserCircle2 } from 'lucide-react'
+import { Calculator, Home, MessageSquareText, Settings, Sparkles } from 'lucide-react'
 import { clsx } from 'clsx'
 
 const navItems = [
   { to: '/', label: 'Home', icon: Home },
   { to: '/calculator', label: 'Quote', icon: Calculator },
-  { to: '/clients', label: 'Clients', icon: UserCircle2 },
   { to: '/messages', label: 'Messages', icon: MessageSquareText },
   { to: '/settings', label: 'Settings', icon: Settings },
 ]
 
 export const BottomNav = () => (
   <nav className='fixed bottom-3 left-1/2 z-40 w-[min(96vw,760px)] -translate-x-1/2 rounded-[28px] border border-[var(--stroke-soft)] bg-[linear-gradient(140deg,var(--glass-strong),var(--glass-soft))] px-2 py-2 shadow-[var(--shadow-float)] backdrop-blur-2xl'>
-    <ul className='grid grid-cols-5 gap-1'>
+    <ul className='grid grid-cols-4 gap-1'>
       {navItems.map(({ to, label, icon: Icon }) => (
         <li key={to}>
           <NavLink

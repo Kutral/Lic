@@ -5,7 +5,7 @@ import { Card } from '../components/ui/Card'
 import { plans } from '../data/plans'
 
 export const ComparePage = () => {
-  const [selected, setSelected] = useState<number[]>([714, 936])
+  const [selected, setSelected] = useState<number[]>([736, 745])
 
   return (
     <PageWrapper title='Plan Comparison' subtitle='Pick up to 3 plans and compare premium, maturity, and death benefits side by side.' eyebrow='Decision Studio'>

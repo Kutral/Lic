@@ -6,12 +6,21 @@ import { planCategories } from '../data/plans'
 import { Card } from '../components/ui/Card'
 
 export const PlansPage = () => {
-  const { query, setQuery, type, setType, filteredPlans } = usePlanFilter()
+  const { query, setQuery, type, setType, age, setAge, filteredPlans } = usePlanFilter()
 
   return (
     <PageWrapper title='Policy Encyclopedia' subtitle='Search across categories with eligibility, SA range, and premium planning context.' eyebrow='All LIC Plans'>
-      <div className='mb-4 grid gap-3 md:grid-cols-3'>
+      <div className='mb-4 grid gap-3 md:grid-cols-4'>
         <Input label='Search' value={query} onChange={(event) => setQuery(event.target.value)} placeholder='Plan name or number' />
+        <Input
+          label='Filter by Age'
+          type='number'
+          value={age}
+          onChange={(event) => setAge(event.target.value ? Number(event.target.value) : '')}
+          placeholder='Enter age'
+          min={0}
+          max={100}
+        />
         <label className='block md:col-span-2'>
           <span className='mb-1.5 block text-xs font-semibold uppercase tracking-wide text-[var(--text-tertiary)]'>Category</span>
           <select

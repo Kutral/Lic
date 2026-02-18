@@ -7,53 +7,18 @@ import { useTheme } from '../hooks/useTheme'
 import { Button } from '../components/ui/Button'
 import { Input } from '../components/ui/Input'
 import { useUIStore } from '../store/uiStore'
-
-interface AgentProfile {
-  name: string
-  contact: string
-  whatsapp: string
-  email: string
-  licId: string
-  branch: string
-  doCode: string
-  brandName: string
-  brandTagline: string
-}
-
-const profileStorageKey = 'lic-agent-profile-v1'
-
-const defaultProfile: AgentProfile = {
-  name: '',
-  contact: '',
-  whatsapp: '',
-  email: '',
-  licId: '',
-  branch: '',
-  doCode: '',
-  brandName: '',
-  brandTagline: '',
-}
+import { type AgentProfile, loadAgentProfile, saveAgentProfile } from '../utils/agentProfile'
 
 export const SettingsPage = () => {
   const { theme, setTheme } = useTheme()
   const { showToast } = useUIStore()
-  const [profile, setProfile] = useState<AgentProfile>(() => {
-    const raw = localStorage.getItem(profileStorageKey)
-    if (!raw) return defaultProfile
-
-    try {
-      const parsed = JSON.parse(raw) as Partial<AgentProfile>
-      return { ...defaultProfile, ...parsed }
-    } catch {
-      return defaultProfile
-    }
-  })
+  const [profile, setProfile] = useState<AgentProfile>(loadAgentProfile)
 
   const updateProfile = (patch: Partial<AgentProfile>) =>
     setProfile((prev) => ({ ...prev, ...patch }))
 
   const saveProfile = () => {
-    localStorage.setItem(profileStorageKey, JSON.stringify(profile))
+    saveAgentProfile(profile)
     showToast('Profile saved', 'Agent details and branding updated.')
   }
 

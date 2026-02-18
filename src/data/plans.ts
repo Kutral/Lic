@@ -9,7 +9,7 @@ const modeRebates = {
 
 export const plans: LICPlan[] = [
   {
-    planNo: 714,
+    planNo: 736,
     name: 'Jeevan Labh',
     type: 'endowment',
     minAge: 8,
@@ -34,10 +34,10 @@ export const plans: LICPlan[] = [
     features: ['Limited premium', 'Participating', 'Maturity + bonus'],
     isActive: true,
     lastVerified: '2026-02-18',
-    sourceRefs: ['https://licindia.in/web/guest/jeevan-labh-plan-no-714'],
+    sourceRefs: ['https://licindia.in/web/guest/jeevan-labh-plan-no-736'],
   },
   {
-    planNo: 717,
+    planNo: 868,
     name: 'Jeevan Azad',
     type: 'endowment',
     minAge: 90 / 12,
@@ -53,12 +53,12 @@ export const plans: LICPlan[] = [
     riders: ['Accidental Benefit Rider'],
     description: 'Small-ticket guaranteed endowment focused on family protection.',
     features: ['Guaranteed additions', 'Risk cover'],
-    isActive: true,
+    isActive: false,
     lastVerified: '2026-02-18',
-    sourceRefs: ['https://licindia.in/web/guest/jeevan-azad-plan-no-717'],
+    sourceRefs: ['https://licindia.in/web/guest/jeevan-azad-plan-no-868'],
   },
   {
-    planNo: 936,
+    planNo: 745,
     name: 'Jeevan Umang',
     type: 'wholelife',
     minAge: 90 / 12,
@@ -82,10 +82,10 @@ export const plans: LICPlan[] = [
     features: ['8% SA survival payout', 'Whole-life cover', 'Participating'],
     isActive: true,
     lastVerified: '2026-02-18',
-    sourceRefs: ['https://licindia.in/web/guest/jeevan-umang-plan-no-936'],
+    sourceRefs: ['https://licindia.in/web/guest/jeevan-umang-plan-no-745'],
   },
   {
-    planNo: 716,
+    planNo: 771,
     name: 'Jeevan Utsav',
     type: 'wholelife',
     minAge: 90 / 12,
@@ -103,7 +103,7 @@ export const plans: LICPlan[] = [
     features: ['Guaranteed additions', 'Lifetime income options'],
     isActive: true,
     lastVerified: '2026-02-18',
-    sourceRefs: ['https://licindia.in/web/guest/jeevan-utsav-plan-no-716'],
+    sourceRefs: ['https://licindia.in/web/guest/jeevan-utsav-plan-no-771'],
   },
   {
     planNo: 749,
@@ -137,7 +137,7 @@ export const plans: LICPlan[] = [
     sourceRefs: ['https://licindia.in/web/guest/bima-ratna-plan-no-749'],
   },
   {
-    planNo: 947,
+    planNo: 720,
     name: 'New Money Back Plan (20 Years)',
     type: 'moneyback',
     minAge: 13,
@@ -160,10 +160,10 @@ export const plans: LICPlan[] = [
     features: ['Periodic payouts', 'Bonus participation'],
     isActive: true,
     lastVerified: '2026-02-18',
-    sourceRefs: ['https://licindia.in/web/guest/new-money-back-plan-20-years-plan-no-947'],
+    sourceRefs: ['https://licindia.in/web/guest/new-money-back-plan-20-years-plan-no-720'],
   },
   {
-    planNo: 948,
+    planNo: 721,
     name: 'New Money Back Plan (25 Years)',
     type: 'moneyback',
     minAge: 13,
@@ -187,10 +187,10 @@ export const plans: LICPlan[] = [
     features: ['Long term', 'Bonus + FAB'],
     isActive: true,
     lastVerified: '2026-02-18',
-    sourceRefs: ['https://licindia.in/web/guest/new-money-back-plan-25-years-plan-no-948'],
+    sourceRefs: ['https://licindia.in/web/guest/new-money-back-plan-25-years-plan-no-721'],
   },
   {
-    planNo: 718,
+    planNo: 874,
     name: 'Amritbaal',
     type: 'child',
     minAge: 30 / 12,
@@ -211,7 +211,7 @@ export const plans: LICPlan[] = [
     sourceRefs: ['https://licindia.in/web/guest/amritbaal-plan-no-874'],
   },
   {
-    planNo: 932,
+    planNo: 732,
     name: 'New Children Money Back Plan',
     type: 'child',
     minAge: 0,
@@ -234,7 +234,7 @@ export const plans: LICPlan[] = [
     features: ['Education milestone payouts', 'Participating'],
     isActive: true,
     lastVerified: '2026-02-18',
-    sourceRefs: ['https://licindia.in/web/guest/new-children-money-back-plan-no-932'],
+    sourceRefs: ['https://licindia.in/web/guest/new-children-money-back-plan-no-732'],
   },
   {
     planNo: 954,

@@ -4,8 +4,10 @@ import jsPDF from 'jspdf'
 import { useRef } from 'react'
 import { motion } from 'framer-motion'
 import { useCalculator } from '../../hooks/useCalculator'
+import { useClientStore } from '../../store/clientStore'
 import { useUIStore } from '../../store/uiStore'
 import { formatCurrencyINR } from '../../utils/formatCurrency'
+import { loadAgentProfile } from '../../utils/agentProfile'
 import { Button } from '../ui/Button'
 import { Card } from '../ui/Card'
 
@@ -17,9 +19,12 @@ const Metric = ({ label, value }: { label: string; value: string }) => (
 )
 
 export const ResultCard = () => {
-  const { result, selectedPlan } = useCalculator()
+  const { result, selectedPlan, selectedClientId } = useCalculator()
+  const { clients } = useClientStore()
   const { showToast } = useUIStore()
   const cardRef = useRef<HTMLDivElement>(null)
+  const agent = loadAgentProfile()
+  const selectedClient = clients.find((client) => client.id === selectedClientId)
 
   if (!result || !selectedPlan) {
     return (
@@ -41,7 +46,20 @@ export const ResultCard = () => {
   }
 
   const onShare = async () => {
-    const text = `${selectedPlan.name} (${selectedPlan.planNo}) premium quote: ${formatCurrencyINR(result.totalPremiumByMode)}.`
+    const header = `${agent.brandName || 'LIC Premium Quote'}`
+    const advisor = [agent.name, agent.licId ? `LIC ID: ${agent.licId}` : null, agent.contact].filter(Boolean).join(' | ')
+    const clientLine = selectedClient ? `Client: ${selectedClient.name} (${selectedClient.phone})` : null
+    const text = [
+      header,
+      `${selectedPlan.name} (${selectedPlan.planNo})`,
+      `Total Premium: ${formatCurrencyINR(result.totalPremiumByMode)}`,
+      `Maturity: ${formatCurrencyINR(result.maturityEstimate)}`,
+      clientLine,
+      advisor,
+    ]
+      .filter(Boolean)
+      .join('\n')
+
     if (navigator.share) {
       await navigator.share({ title: 'LIC Premium Quote', text })
       showToast('Quote shared', 'Shared using native share sheet.')
@@ -56,6 +74,14 @@ export const ResultCard = () => {
     <Card variant='metric' className='space-y-4' glow>
       <div ref={cardRef} className='space-y-4'>
         <p className='text-xs uppercase tracking-[0.16em] text-[var(--text-tertiary)]'>Premium Result</p>
+        {(agent.name || agent.brandName || selectedClient) && (
+          <div className='rounded-2xl border border-[var(--stroke-soft)] bg-[var(--bg-elev-2)] p-3 text-xs text-[var(--text-secondary)]'>
+            {agent.brandName && <p className='font-semibold text-[var(--text-primary)]'>{agent.brandName}</p>}
+            {agent.name && <p>Advisor: {agent.name}{agent.licId ? ` (LIC ID: ${agent.licId})` : ''}</p>}
+            {agent.contact && <p>Contact: {agent.contact}</p>}
+            {selectedClient && <p>Client: {selectedClient.name} ({selectedClient.phone})</p>}
+          </div>
+        )}
         <motion.h3 initial={{ opacity: 0.5, y: 8 }} animate={{ opacity: 1, y: 0 }} className='text-3xl font-extrabold text-[var(--accent-blue)] md:text-4xl'>
           {formatCurrencyINR(result.totalPremiumByMode)}
         </motion.h3>

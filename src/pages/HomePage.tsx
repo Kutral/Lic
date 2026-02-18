@@ -1,56 +1,30 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { ArrowRight, BarChart3, Calculator, Files, FolderKanban, Sparkles } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { PageWrapper } from '../components/layout/PageWrapper'
 import { Card } from '../components/ui/Card'
 import { StatTile } from '../components/ui/StatTile'
-import { formatCompactINR, formatCurrencyINR } from '../utils/formatCurrency'
+import { formatCompactINR } from '../utils/formatCurrency'
 import { plans } from '../data/plans'
-import { db } from '../store/db'
+import { loadAgentProfile } from '../utils/agentProfile'
 
-const getGreeting = () => {
+const getGreeting = (name?: string) => {
   const hour = new Date().getHours()
-  if (hour < 12) return 'Good Morning, Agent'
-  if (hour < 17) return 'Good Afternoon, Agent'
-  return 'Good Evening, Agent'
+  const display = name?.trim() ? name.trim() : 'Agent'
+  if (hour < 12) return `Good Morning, ${display}`
+  if (hour < 17) return `Good Afternoon, ${display}`
+  return `Good Evening, ${display}`
 }
 
 export const HomePage = () => {
   const trending = useMemo(() => plans.slice(0, 6), [])
-  const [policiesCalculated, setPoliciesCalculated] = useState(0)
-  const [averagePremium, setAveragePremium] = useState<number | null>(null)
-
-  useEffect(() => {
-    const loadMetrics = async () => {
-      const calculations = await db.calculations.toArray()
-      setPoliciesCalculated(calculations.length)
-      if (!calculations.length) {
-        setAveragePremium(null)
-        return
-      }
-
-      const avg =
-        calculations.reduce((sum, item) => sum + item.output.totalPremiumByMode, 0) /
-        calculations.length
-      setAveragePremium(avg)
-    }
-
-    void loadMetrics()
-  }, [])
+  const agent = loadAgentProfile()
 
   return (
-    <PageWrapper title={getGreeting()} subtitle='Ready with premium quote tools, plan intelligence, and client-ready messaging.' eyebrow='LIC Premium Dashboard'>
-      <section className='mb-4 grid gap-3 md:grid-cols-3'>
-        <StatTile
-          label='Policies Calculated'
-          value={policiesCalculated.toLocaleString('en-IN')}
-          trend={policiesCalculated ? undefined : 'No calculations yet'}
-        />
+    <PageWrapper title={getGreeting(agent.name)} subtitle='Ready with premium quote tools, plan intelligence, and client-ready messaging.' eyebrow='LIC Premium Dashboard'>
+      <section className='mb-4 grid gap-3 md:grid-cols-2'>
         <StatTile label='Active Plans' value={plans.length.toString()} />
-        <StatTile
-          label='Average Premium'
-          value={averagePremium === null ? 'No data yet' : formatCurrencyINR(averagePremium)}
-        />
+        <StatTile label='Coverage Focus' value='Family + Retirement + Term' />
       </section>
 
       <section className='mb-5 grid grid-cols-2 gap-3 md:grid-cols-4'>
@@ -58,7 +32,7 @@ export const HomePage = () => {
           { to: '/calculator', label: 'Calculator', icon: Calculator },
           { to: '/plans', label: 'Plans', icon: FolderKanban },
           { to: '/compare', label: 'Compare', icon: BarChart3 },
-          { to: '/clients', label: 'Clients', icon: Files },
+          { to: '/messages', label: 'Messages', icon: Files },
         ].map((item) => (
           <Link key={item.to} to={item.to}>
             <Card variant='interactive' className='h-full'>

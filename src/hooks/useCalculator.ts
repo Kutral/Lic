@@ -3,7 +3,7 @@ import { useCalculatorStore } from '../store/calculatorStore'
 import { planMap } from '../data/plans'
 
 export const useCalculator = () => {
-  const { draft, result, error, setDraft, runCalculation, reset } = useCalculatorStore()
+  const { draft, result, error, selectedClientId, setDraft, setSelectedClientId, runCalculation, reset } = useCalculatorStore()
 
   const selectedPlan = useMemo(() => planMap.get(draft.planNo), [draft.planNo])
 
@@ -11,8 +11,10 @@ export const useCalculator = () => {
     draft,
     result,
     error,
+    selectedClientId,
     selectedPlan,
     setDraft,
+    setSelectedClientId,
     runCalculation,
     reset,
   }

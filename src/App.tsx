@@ -3,7 +3,6 @@ import { HashRouter, Navigate, Route, Routes, useLocation } from 'react-router-d
 import { BottomNav } from './components/layout/BottomNav'
 import { ToastViewport } from './components/ui/ToastViewport'
 import { CalculatorPage } from './pages/CalculatorPage'
-import { ClientsPage } from './pages/ClientsPage'
 import { ComparePage } from './pages/ComparePage'
 import { HomePage } from './pages/HomePage'
 import { MessagesPage } from './pages/MessagesPage'
@@ -21,7 +20,6 @@ const AnimatedRoutes = () => {
         <Route path='/calculator' element={<CalculatorPage />} />
         <Route path='/plans' element={<PlansPage />} />
         <Route path='/compare' element={<ComparePage />} />
-        <Route path='/clients' element={<ClientsPage />} />
         <Route path='/messages' element={<MessagesPage />} />
         <Route path='/tools' element={<ToolsPage />} />
         <Route path='/settings' element={<SettingsPage />} />
