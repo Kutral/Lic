@@ -28,7 +28,7 @@ describe('premium engine', () => {
     expect(() =>
       calculatePremium({
         ...validInput,
-        planNo: 874,
+        planNo: 774,
         dateOfBirth: '1990-01-01',
       }),
     ).toThrowError()
