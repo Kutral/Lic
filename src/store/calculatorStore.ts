@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import type { CalculatorInput, PremiumBreakdown } from '../types'
 import { calculatePremium } from '../utils/premium-engine'
+import { db } from './db'
 
 interface CalculatorState {
   draft: CalculatorInput
@@ -36,6 +37,11 @@ export const useCalculatorStore = create<CalculatorState>((set, get) => ({
     try {
       const result = calculatePremium(draft)
       set({ result, error: null })
+      void db.calculations.add({
+        input: { ...draft },
+        output: { ...result },
+        createdAt: new Date().toISOString(),
+      })
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Unable to calculate premium with current inputs.'
       set({ result: null, error: message })

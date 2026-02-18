@@ -1,11 +1,12 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { ArrowRight, BarChart3, Calculator, Files, FolderKanban, Sparkles } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { PageWrapper } from '../components/layout/PageWrapper'
 import { Card } from '../components/ui/Card'
 import { StatTile } from '../components/ui/StatTile'
-import { formatCompactINR } from '../utils/formatCurrency'
+import { formatCompactINR, formatCurrencyINR } from '../utils/formatCurrency'
 import { plans } from '../data/plans'
+import { db } from '../store/db'
 
 const getGreeting = () => {
   const hour = new Date().getHours()
@@ -16,13 +17,40 @@ const getGreeting = () => {
 
 export const HomePage = () => {
   const trending = useMemo(() => plans.slice(0, 6), [])
+  const [policiesCalculated, setPoliciesCalculated] = useState(0)
+  const [averagePremium, setAveragePremium] = useState<number | null>(null)
+
+  useEffect(() => {
+    const loadMetrics = async () => {
+      const calculations = await db.calculations.toArray()
+      setPoliciesCalculated(calculations.length)
+      if (!calculations.length) {
+        setAveragePremium(null)
+        return
+      }
+
+      const avg =
+        calculations.reduce((sum, item) => sum + item.output.totalPremiumByMode, 0) /
+        calculations.length
+      setAveragePremium(avg)
+    }
+
+    void loadMetrics()
+  }, [])
 
   return (
     <PageWrapper title={getGreeting()} subtitle='Ready with premium quote tools, plan intelligence, and client-ready messaging.' eyebrow='LIC Premium Dashboard'>
       <section className='mb-4 grid gap-3 md:grid-cols-3'>
-        <StatTile label='Policies Calculated' value={(1240).toLocaleString('en-IN')} trend='+18% this month' />
-        <StatTile label='Active Plans' value={plans.length.toString()} trend='All categories synced' />
-        <StatTile label='Avg Ticket Size' value={formatCompactINR(1450000)} trend='Higher than last quarter' />
+        <StatTile
+          label='Policies Calculated'
+          value={policiesCalculated.toLocaleString('en-IN')}
+          trend={policiesCalculated ? undefined : 'No calculations yet'}
+        />
+        <StatTile label='Active Plans' value={plans.length.toString()} />
+        <StatTile
+          label='Average Premium'
+          value={averagePremium === null ? 'No data yet' : formatCurrencyINR(averagePremium)}
+        />
       </section>
 
       <section className='mb-5 grid grid-cols-2 gap-3 md:grid-cols-4'>
