@@ -1,10 +1,21 @@
 import { clsx } from 'clsx'
 import type { PropsWithChildren } from 'react'
 
-export const Card = ({ children, className }: PropsWithChildren<{ className?: string }>) => (
+interface CardProps extends PropsWithChildren {
+  className?: string
+  variant?: 'glass' | 'solid' | 'metric' | 'interactive'
+  glow?: boolean
+}
+
+export const Card = ({ children, className, variant = 'glass', glow = false }: CardProps) => (
   <section
     className={clsx(
-      'rounded-3xl border border-white/40 bg-[color-mix(in_srgb,var(--bg-card)_70%,transparent)] p-4 shadow-xl backdrop-blur-xl',
+      'relative overflow-hidden rounded-[24px] border p-4 md:p-5',
+      variant === 'glass' && 'glass-panel',
+      variant === 'solid' && 'bg-[var(--bg-elev-3)] border-[var(--stroke-soft)] shadow-[var(--shadow-soft)]',
+      variant === 'metric' && 'glass-panel bg-[linear-gradient(150deg,var(--glass-strong),rgba(106,162,255,0.18))]',
+      variant === 'interactive' && 'glass-panel transition duration-300 hover:-translate-y-0.5 hover:shadow-[var(--shadow-float)]',
+      glow && 'animate-[pulseGlow_4s_ease-in-out_infinite]',
       className,
     )}
   >

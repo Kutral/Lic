@@ -30,24 +30,36 @@ export const CompareTable = ({ plans }: { plans: LICPlan[] }) => {
     }
   })
 
+  const best = [...rows].sort((a, b) => b.maturity - a.maturity)[0]?.plan.planNo
+
   return (
-    <Card className='overflow-auto'>
-      <table className='w-full min-w-[640px] text-left text-sm'>
+    <Card variant='glass' className='overflow-auto'>
+      <table className='w-full min-w-[680px] text-left text-sm'>
         <thead>
-          <tr className='text-[var(--text-secondary)]'>
+          <tr className='text-[var(--text-tertiary)]'>
             <th className='py-2'>Plan</th>
             <th>Premium</th>
             <th>Maturity</th>
             <th>Death Benefit</th>
+            <th>Best For</th>
           </tr>
         </thead>
         <tbody>
           {rows.map((row) => (
-            <tr key={row.plan.planNo} className='border-t border-[var(--separator)]'>
-              <td className='py-2'>{row.plan.name}</td>
+            <tr key={row.plan.planNo} className='border-t border-[var(--stroke-soft)]'>
+              <td className='py-3 font-semibold'>{row.plan.name}</td>
               <td>{formatCurrencyINR(row.premium)}</td>
               <td>{formatCurrencyINR(row.maturity)}</td>
               <td>{formatCurrencyINR(row.deathBenefit)}</td>
+              <td>
+                {row.plan.planNo === best ? (
+                  <span className='rounded-full border border-emerald-300/25 bg-emerald-500/15 px-2 py-1 text-xs text-[var(--accent-emerald)]'>
+                    Higher Maturity
+                  </span>
+                ) : (
+                  <span className='text-xs text-[var(--text-tertiary)]'>Balanced</span>
+                )}
+              </td>
             </tr>
           ))}
         </tbody>

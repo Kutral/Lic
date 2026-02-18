@@ -1,15 +1,22 @@
 import type { PropsWithChildren } from 'react'
 import { motion } from 'framer-motion'
+import { TopHeader } from './TopHeader'
 
-export const PageWrapper = ({ title, children }: PropsWithChildren<{ title: string }>) => (
+interface PageWrapperProps extends PropsWithChildren {
+  title?: string
+  subtitle?: string
+  eyebrow?: string
+}
+
+export const PageWrapper = ({ title, subtitle, eyebrow, children }: PageWrapperProps) => (
   <motion.main
-    initial={{ opacity: 0, y: 12 }}
+    initial={{ opacity: 0, y: 10 }}
     animate={{ opacity: 1, y: 0 }}
     exit={{ opacity: 0, y: -8 }}
-    transition={{ type: 'spring', damping: 25, stiffness: 120 }}
-    className='mx-auto w-full max-w-5xl px-4 pb-28 pt-6 md:px-6'
+    transition={{ type: 'spring', damping: 24, stiffness: 130 }}
+    className='mx-auto w-full max-w-6xl px-4 pb-30 pt-5 md:px-6'
   >
-    <h1 className='mb-4 text-3xl font-bold tracking-tight text-[var(--text-primary)] md:text-4xl'>{title}</h1>
+    {title && <TopHeader eyebrow={eyebrow} title={title} subtitle={subtitle} />}
     {children}
   </motion.main>
 )

@@ -1,3 +1,4 @@
+import { Calculator, CalendarClock, CircleDollarSign, ShieldPlus } from 'lucide-react'
 import { plans } from '../../data/plans'
 import { useCalculator } from '../../hooks/useCalculator'
 import { Button } from '../ui/Button'
@@ -9,73 +10,73 @@ export const PremiumForm = () => {
   const { draft, selectedPlan, setDraft, runCalculation } = useCalculator()
 
   return (
-    <Card className='space-y-4'>
-      <label className='block text-xs font-semibold text-[var(--text-secondary)]'>Plan</label>
-      <select
-        className='w-full rounded-2xl border border-[var(--separator)] bg-[var(--bg-card)] px-3 py-3 text-sm'
-        value={draft.planNo}
-        onChange={(event) => {
-          const planNo = Number(event.target.value)
-          const plan = plans.find((entry) => entry.planNo === planNo)
-          if (!plan) return
+    <Card variant='glass' className='space-y-5'>
+      <div className='flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--text-tertiary)]'>
+        <Calculator size={14} /> Quote Builder
+      </div>
 
-          setDraft({
-            planNo,
-            policyTerm: plan.minTerm,
-            premiumPayingTerm: Math.min(plan.minTerm, 16),
-            sumAssured: Math.max(plan.minSA, draft.sumAssured),
-          })
-        }}
-      >
-        {plans.map((plan) => (
-          <option key={plan.planNo} value={plan.planNo}>
-            {plan.planNo} - {plan.name}
-          </option>
-        ))}
-      </select>
-
-      <div className='grid gap-4 md:grid-cols-2'>
-        <div>
-          <label className='mb-1 block text-xs font-semibold text-[var(--text-secondary)]'>Date of Birth</label>
-          <Input type='date' value={draft.dateOfBirth} onChange={(event) => setDraft({ dateOfBirth: event.target.value })} />
-        </div>
-        <div>
-          <label className='mb-1 block text-xs font-semibold text-[var(--text-secondary)]'>Sum Assured (INR)</label>
-          <Input
-            type='number'
-            min={selectedPlan?.minSA}
-            max={selectedPlan?.maxSA}
-            value={draft.sumAssured}
-            onChange={(event) => setDraft({ sumAssured: Number(event.target.value || 0) })}
-          />
-        </div>
+      <div className='space-y-3'>
+        <label className='text-xs font-semibold uppercase tracking-wide text-[var(--text-tertiary)]'>Select Plan</label>
+        <select
+          className='w-full rounded-2xl border border-[var(--stroke-soft)] bg-[var(--bg-elev-2)] px-3 py-3 text-sm shadow-[var(--shadow-soft)] outline-none focus:border-[var(--stroke-strong)]'
+          value={draft.planNo}
+          onChange={(event) => {
+            const planNo = Number(event.target.value)
+            const plan = plans.find((entry) => entry.planNo === planNo)
+            if (!plan) return
+            setDraft({
+              planNo,
+              policyTerm: plan.minTerm,
+              premiumPayingTerm: Math.min(plan.minTerm, 16),
+              sumAssured: Math.max(plan.minSA, draft.sumAssured),
+            })
+          }}
+        >
+          {plans.map((plan) => (
+            <option key={plan.planNo} value={plan.planNo}>
+              {plan.planNo} - {plan.name}
+            </option>
+          ))}
+        </select>
       </div>
 
       <div className='grid gap-4 md:grid-cols-2'>
-        <div>
-          <label className='mb-1 block text-xs font-semibold text-[var(--text-secondary)]'>Policy Term</label>
-          <Input
-            type='number'
-            min={selectedPlan?.minTerm}
-            max={selectedPlan?.maxTerm}
-            value={draft.policyTerm}
-            onChange={(event) => setDraft({ policyTerm: Number(event.target.value || 0) })}
-          />
-        </div>
-        <div>
-          <label className='mb-1 block text-xs font-semibold text-[var(--text-secondary)]'>Premium Paying Term</label>
-          <Input
-            type='number'
-            min={1}
-            max={draft.policyTerm}
-            value={draft.premiumPayingTerm}
-            onChange={(event) => setDraft({ premiumPayingTerm: Number(event.target.value || 0) })}
-          />
-        </div>
+        <Input label='Date of Birth' type='date' value={draft.dateOfBirth} onChange={(event) => setDraft({ dateOfBirth: event.target.value })} leading={<CalendarClock size={14} />} />
+        <Input
+          label='Sum Assured'
+          type='number'
+          min={selectedPlan?.minSA}
+          max={selectedPlan?.maxSA}
+          value={draft.sumAssured}
+          onChange={(event) => setDraft({ sumAssured: Number(event.target.value || 0) })}
+          leading='INR'
+          helperText={selectedPlan ? `Allowed: INR ${selectedPlan.minSA.toLocaleString('en-IN')} to ${selectedPlan.maxSA.toLocaleString('en-IN')}` : ''}
+        />
       </div>
 
-      <div>
-        <label className='mb-2 block text-xs font-semibold text-[var(--text-secondary)]'>Payment Mode</label>
+      <div className='grid gap-4 md:grid-cols-2'>
+        <Input
+          label='Policy Term'
+          type='number'
+          min={selectedPlan?.minTerm}
+          max={selectedPlan?.maxTerm}
+          value={draft.policyTerm}
+          onChange={(event) => setDraft({ policyTerm: Number(event.target.value || 0) })}
+          leading={<CircleDollarSign size={14} />}
+        />
+        <Input
+          label='Premium Paying Term'
+          type='number'
+          min={1}
+          max={draft.policyTerm}
+          value={draft.premiumPayingTerm}
+          onChange={(event) => setDraft({ premiumPayingTerm: Number(event.target.value || 0) })}
+          leading={<CircleDollarSign size={14} />}
+        />
+      </div>
+
+      <div className='space-y-2'>
+        <label className='text-xs font-semibold uppercase tracking-wide text-[var(--text-tertiary)]'>Payment Mode</label>
         <SegmentedControl
           value={draft.paymentMode}
           onChange={(paymentMode) => setDraft({ paymentMode })}
@@ -89,35 +90,62 @@ export const PremiumForm = () => {
       </div>
 
       <div className='grid gap-3 md:grid-cols-3'>
-        <label className='flex items-center gap-2 rounded-2xl bg-[var(--bg-grouped)] p-3 text-xs'>
-          <input
-            type='checkbox'
-            checked={draft.includeAccidentalRider}
-            onChange={(event) => setDraft({ includeAccidentalRider: event.target.checked })}
+        <div className='space-y-2 md:col-span-2'>
+          <label className='text-xs font-semibold uppercase tracking-wide text-[var(--text-tertiary)]'>Riders</label>
+          <div className='grid gap-2 md:grid-cols-3'>
+            <label className='flex items-center gap-2 rounded-2xl border border-[var(--stroke-soft)] bg-[var(--bg-elev-2)] p-3 text-xs text-[var(--text-secondary)]'>
+              <input type='checkbox' checked={draft.includeAccidentalRider} onChange={(event) => setDraft({ includeAccidentalRider: event.target.checked })} />
+              Accident Benefit
+            </label>
+            <label className='flex items-center gap-2 rounded-2xl border border-[var(--stroke-soft)] bg-[var(--bg-elev-2)] p-3 text-xs text-[var(--text-secondary)]'>
+              <input type='checkbox' checked={draft.includeTermRider} onChange={(event) => setDraft({ includeTermRider: event.target.checked })} />
+              Term Rider
+            </label>
+            <label className='flex items-center gap-2 rounded-2xl border border-[var(--stroke-soft)] bg-[var(--bg-elev-2)] p-3 text-xs text-[var(--text-secondary)]'>
+              <input type='checkbox' checked={draft.includePwbRider} onChange={(event) => setDraft({ includePwbRider: event.target.checked })} />
+              Premium Waiver
+            </label>
+          </div>
+        </div>
+
+        <div className='space-y-2'>
+          <label className='text-xs font-semibold uppercase tracking-wide text-[var(--text-tertiary)]'>Life Profile</label>
+          <SegmentedControl
+            value={draft.gender}
+            onChange={(gender) => setDraft({ gender })}
+            options={[
+              { value: 'male', label: 'Male' },
+              { value: 'female', label: 'Female' },
+              { value: 'other', label: 'Other' },
+            ]}
           />
-          Accident Rider
-        </label>
-        <label className='flex items-center gap-2 rounded-2xl bg-[var(--bg-grouped)] p-3 text-xs'>
-          <input
-            type='checkbox'
-            checked={draft.includeTermRider}
-            onChange={(event) => setDraft({ includeTermRider: event.target.checked })}
+          <SegmentedControl
+            value={draft.smoker ? 'smoker' : 'non-smoker'}
+            onChange={(next) => setDraft({ smoker: next === 'smoker' })}
+            options={[
+              { value: 'non-smoker', label: 'Non-smoker' },
+              { value: 'smoker', label: 'Smoker' },
+            ]}
           />
-          Term Rider
-        </label>
-        <label className='flex items-center gap-2 rounded-2xl bg-[var(--bg-grouped)] p-3 text-xs'>
-          <input
-            type='checkbox'
-            checked={draft.includePwbRider}
-            onChange={(event) => setDraft({ includePwbRider: event.target.checked })}
-          />
-          Premium Waiver
-        </label>
+        </div>
       </div>
 
-      <Button className='w-full' onClick={() => runCalculation()}>
-        Calculate Premium
+      <div className='space-y-2'>
+        <label className='text-xs font-semibold uppercase tracking-wide text-[var(--text-tertiary)]'>Age Logic</label>
+        <SegmentedControl
+          value={draft.ageMode}
+          onChange={(ageMode) => setDraft({ ageMode })}
+          options={[
+            { value: 'nearest', label: 'Nearest Birthday' },
+            { value: 'last', label: 'Last Birthday' },
+          ]}
+        />
+      </div>
+
+      <Button className='w-full' size='lg' leadingIcon={<ShieldPlus size={16} />} onClick={() => runCalculation()}>
+        Calculate Premium Quote
       </Button>
     </Card>
   )
 }
+
