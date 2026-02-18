@@ -7,7 +7,7 @@ import { Input } from '../ui/Input'
 import { SegmentedControl } from '../ui/SegmentedControl'
 
 export const PremiumForm = () => {
-  const { draft, selectedPlan, setDraft, runCalculation } = useCalculator()
+  const { draft, selectedPlan, error, setDraft, runCalculation } = useCalculator()
 
   return (
     <Card variant='glass' className='space-y-5'>
@@ -145,6 +145,12 @@ export const PremiumForm = () => {
       <Button className='w-full' size='lg' leadingIcon={<ShieldPlus size={16} />} onClick={() => runCalculation()}>
         Calculate Premium Quote
       </Button>
+
+      {error && (
+        <div className='rounded-2xl border border-rose-300/35 bg-rose-500/10 px-3 py-2 text-sm text-rose-600'>
+          {error}
+        </div>
+      )}
     </Card>
   )
 }

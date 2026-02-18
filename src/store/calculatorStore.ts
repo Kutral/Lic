@@ -5,6 +5,7 @@ import { calculatePremium } from '../utils/premium-engine'
 interface CalculatorState {
   draft: CalculatorInput
   result: PremiumBreakdown | null
+  error: string | null
   setDraft: (patch: Partial<CalculatorInput>) => void
   runCalculation: () => void
   reset: () => void
@@ -28,11 +29,17 @@ const defaultDraft: CalculatorInput = {
 export const useCalculatorStore = create<CalculatorState>((set, get) => ({
   draft: defaultDraft,
   result: null,
-  setDraft: (patch) => set((state) => ({ draft: { ...state.draft, ...patch } })),
+  error: null,
+  setDraft: (patch) => set((state) => ({ draft: { ...state.draft, ...patch }, error: null })),
   runCalculation: () => {
     const { draft } = get()
-    const result = calculatePremium(draft)
-    set({ result })
+    try {
+      const result = calculatePremium(draft)
+      set({ result, error: null })
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unable to calculate premium with current inputs.'
+      set({ result: null, error: message })
+    }
   },
-  reset: () => set({ draft: defaultDraft, result: null }),
+  reset: () => set({ draft: defaultDraft, result: null, error: null }),
 }))
