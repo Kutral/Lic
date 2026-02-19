@@ -44,20 +44,26 @@ export const HomePage = () => {
         ))}
       </section>
 
-      <section className='mb-5'>
-        <div className='mb-2 flex items-center justify-between'>
-          <h2 className='text-sm font-semibold uppercase tracking-[0.16em] text-[var(--text-tertiary)]'>Trending Plans</h2>
-          <Link to='/plans' className='text-xs font-semibold text-[var(--accent-blue)]'>
-            View all <ArrowRight size={12} className='inline' />
+      <section className='mb-6'>
+        <div className='mb-3 flex items-center justify-between px-1'>
+          <h2 className='text-[13px] font-semibold text-[var(--text-secondary)]'>Trending Plans</h2>
+          <Link to='/plans' className='text-[13px] font-medium text-[var(--accent-blue)]'>
+            See All <ArrowRight size={12} className='inline' />
           </Link>
         </div>
-        <div className='no-scrollbar -mx-1 flex snap-x snap-mandatory gap-3 overflow-x-auto px-1 pb-1 [scrollbar-gutter:stable] [touch-action:pan-x]'>
+        <div className='no-scrollbar -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 [scrollbar-gutter:stable] [touch-action:pan-x]'>
           {trending.map((plan) => (
-            <Card key={plan.planNo} variant='interactive' className='min-w-[82%] snap-start shrink-0 sm:min-w-[300px]'>
-              <p className='text-[11px] font-semibold uppercase tracking-wide text-[var(--text-tertiary)]'>Plan {plan.planNo}</p>
-              <h3 className='text-base font-semibold'>{plan.name}</h3>
-              <p className='mt-1 text-xs text-[var(--text-secondary)]'>{plan.description}</p>
-              <p className='mt-3 text-xs text-[var(--text-tertiary)]'>Starts from {formatCompactINR(plan.minSA)}</p>
+            <Card key={plan.planNo} variant='interactive' className='min-w-[85%] snap-center shrink-0 sm:min-w-[320px]'>
+              <div className='mb-1 flex items-start justify-between'>
+                <p className='text-[11px] font-bold uppercase tracking-wider text-[var(--text-tertiary)]'>Table {plan.planNo}</p>
+                <span className='rounded-full bg-[var(--bg-elev-2)] px-2 py-0.5 text-[10px] font-medium text-[var(--text-secondary)]'>Endowment</span>
+              </div>
+              <h3 className='text-[17px] font-semibold text-[var(--text-primary)]'>{plan.name}</h3>
+              <p className='mt-1 line-clamp-2 text-[13px] leading-relaxed text-[var(--text-secondary)]'>{plan.description}</p>
+              <div className='mt-4 flex items-center justify-between border-t border-[var(--stroke-soft)] pt-3'>
+                <p className='text-[11px] font-medium text-[var(--text-tertiary)]'>Premium from</p>
+                <p className='text-[15px] font-semibold text-[var(--text-primary)]'>{formatCompactINR(plan.minSA)}</p>
+              </div>
             </Card>
           ))}
         </div>

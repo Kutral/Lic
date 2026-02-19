@@ -36,8 +36,5 @@ export const BottomNav = () => (
         </li>
       ))}
     </ul>
-    <div className='pointer-events-none absolute -top-2 right-4 rounded-full border border-blue-300/30 bg-blue-500/10 px-2 py-0.5 text-[10px] text-[var(--accent-blue)]'>
-      <Sparkles size={10} className='mr-1 inline' /> Pro
-    </div>
   </nav>
 )

@@ -7,9 +7,11 @@ interface StatTileProps {
 }
 
 export const StatTile = ({ label, value, trend }: StatTileProps) => (
-  <Card variant='metric' className='space-y-1'>
-    <p className='text-[11px] font-semibold uppercase tracking-wide text-[var(--text-tertiary)]'>{label}</p>
-    <p className='text-xl font-bold text-[var(--text-primary)] md:text-2xl'>{value}</p>
-    {trend && <p className='text-xs text-[var(--accent-emerald)]'>{trend}</p>}
+  <Card variant='metric' className='flex flex-col justify-between space-y-1 py-4'>
+    <p className='text-[13px] font-medium text-[var(--text-secondary)]'>{label}</p>
+    <div className='flex items-baseline gap-2'>
+      <p className='text-2xl font-semibold tracking-tight text-[var(--text-primary)]'>{value}</p>
+      {trend && <p className='text-xs font-medium text-[var(--accent-emerald)]'>{trend}</p>}
+    </div>
   </Card>
 )

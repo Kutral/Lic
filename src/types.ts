@@ -21,6 +21,14 @@ export interface LICPlan {
   name: string
   type: PlanType
   versionTag?: string
+  uin?: string
+  officialCategory?: string
+  entryAgeBasis?: string
+  maturityAgeBasis?: string
+  allowedTerms?: string
+  allowedPPT?: string[]
+  modes?: string[]
+  sourceDoc?: string
   minAge: number
   maxAge: number
   minTerm: number
@@ -74,4 +82,5 @@ export interface PremiumBreakdown {
   deathBenefitEstimate: number
   taxDeduction80C: number
   irrEstimate: number
+  isRealData?: boolean
 }

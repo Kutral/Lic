@@ -9,22 +9,68 @@ const riderRatesPerThousand = {
   pwb: 0.9,
 }
 
-const findNearestRate = (plan: LICPlan, age: number, term: number) => {
-  const ages = Object.keys(plan.premiumRates).map(Number)
+import { planRates, type RateTable } from '../data/rates'
+
+const interpolate = (x: number, x1: number, y1: number, x2: number, y2: number): number => {
+  if (x2 === x1) return y1
+  return y1 + ((x - x1) * (y2 - y1)) / (x2 - x1)
+}
+
+const findRate = (planNo: number, age: number, term: number, fallbackRates: Record<string, Record<string, number>>): { rate: number, isReal: boolean } => {
+  // 1. Try to find the plan's rate table in our enhanced dataset
+  const rates = planRates[planNo]
+
+  // 2. If no enhanced data, fall back to the old "nearest neighbor" logic
+  if (!rates) {
+    return { rate: findNearestRateLegacy(fallbackRates, age, term), isReal: false }
+  }
+
+  // 3. Interpolation Logic
+  const availableAges = Object.keys(rates).map(Number).sort((a, b) => a - b)
+  if (!availableAges.length) return { rate: 55, isReal: false } // hard fallback
+
+  // Find surrounding ages
+  const lowerAge = availableAges.reduce((prev, curr) => (curr <= age ? curr : prev), availableAges[0])
+  const upperAge = availableAges.find((a) => a >= age) ?? availableAges[availableAges.length - 1]
+
+  const getTermRate = (atAge: number, atTerm: number): number => {
+    const ageRates = rates[atAge]
+    if (!ageRates) return 0
+    const terms = Object.keys(ageRates).map(Number).sort((a, b) => a - b)
+    if (!terms.length) return 0
+
+    const lowerTerm = terms.reduce((prev, curr) => (curr <= atTerm ? curr : prev), terms[0])
+    const upperTerm = terms.find((t) => t >= atTerm) ?? terms[terms.length - 1]
+
+    const rate1 = ageRates[lowerTerm]
+    const rate2 = ageRates[upperTerm]
+
+    return interpolate(atTerm, lowerTerm, rate1, upperTerm, rate2)
+  }
+
+  const rateLowerAge = getTermRate(lowerAge, term)
+  const rateUpperAge = getTermRate(upperAge, term)
+
+  const finalRate = interpolate(age, lowerAge, rateLowerAge, upperAge, rateUpperAge)
+  return { rate: finalRate, isReal: true }
+}
+
+const findNearestRateLegacy = (rates: Record<string, Record<string, number>>, age: number, term: number) => {
+  const ages = Object.keys(rates).map(Number)
   if (!ages.length) return 55
 
   const nearestAge = ages.reduce((prev, curr) =>
     Math.abs(curr - age) < Math.abs(prev - age) ? curr : prev,
   )
 
-  const terms = Object.keys(plan.premiumRates[String(nearestAge)] || {}).map(Number)
+  const terms = Object.keys(rates[String(nearestAge)] || {}).map(Number)
   if (!terms.length) return 55
 
   const nearestTerm = terms.reduce((prev, curr) =>
     Math.abs(curr - term) < Math.abs(prev - term) ? curr : prev,
   )
 
-  return plan.premiumRates[String(nearestAge)]?.[String(nearestTerm)] ?? 55
+  return rates[String(nearestAge)]?.[String(nearestTerm)] ?? 55
 }
 
 const getHighSARebate = (plan: LICPlan, sumAssured: number) => {
@@ -107,7 +153,7 @@ export const calculatePremium = (
     throw new Error('Sum assured is outside plan limits')
   }
 
-  const perThousandRate = findNearestRate(plan, age, input.policyTerm)
+  const { rate: perThousandRate, isReal } = findRate(plan.planNo, age, input.policyTerm, plan.premiumRates)
   let baseAnnualPremium = (input.sumAssured / 1000) * perThousandRate
 
   if (plan.type === 'term' && input.smoker) {
@@ -156,5 +202,6 @@ export const calculatePremium = (
     deathBenefitEstimate,
     taxDeduction80C: Math.min(totalPremiumByMode, 150000),
     irrEstimate,
+    isRealData: isReal,
   }
 }

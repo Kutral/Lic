@@ -1,25 +1,23 @@
 import { useEffect } from 'react'
 import { useThemeStore } from '../store/themeStore'
 
-const applyTheme = (theme: 'light' | 'dark' | 'auto') => {
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-  const finalTheme = theme === 'auto' ? (prefersDark ? 'dark' : 'light') : theme
-  document.documentElement.dataset.theme = finalTheme
-}
-
 export const useTheme = () => {
   const { theme, setTheme } = useThemeStore()
 
   useEffect(() => {
-    const stored = localStorage.getItem('lic-theme') as 'light' | 'dark' | 'auto' | null
-    applyTheme(stored ?? theme)
+    const root = window.document.documentElement
+    root.classList.remove('light', 'dark')
+
+    if (theme === 'auto') {
+      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+      root.classList.add(systemTheme)
+      root.dataset.theme = systemTheme // For CSS selector usage
+      return
+    }
+
+    root.classList.add(theme)
+    root.dataset.theme = theme
   }, [theme])
 
-  return {
-    theme,
-    setTheme: (next: 'light' | 'dark' | 'auto') => {
-      setTheme(next)
-      applyTheme(next)
-    },
-  }
+  return { theme, setTheme }
 }

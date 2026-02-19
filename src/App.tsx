@@ -29,16 +29,16 @@ const AnimatedRoutes = () => {
   )
 }
 
+import { useTheme } from './hooks/useTheme'
+
 export default function App() {
+  useTheme() // Initialize theme system
+
   return (
     <HashRouter>
       <div className='relative min-h-screen overflow-x-hidden'>
-        <div className='pointer-events-none fixed inset-0 -z-10'>
-          <div className='absolute -left-20 top-[-140px] h-[420px] w-[420px] rounded-full bg-blue-500/20 blur-3xl' />
-          <div className='absolute right-[-90px] top-[20%] h-[340px] w-[340px] rounded-full bg-emerald-400/15 blur-3xl' />
-          <div className='absolute bottom-[-120px] left-[20%] h-[320px] w-[320px] rounded-full bg-indigo-500/18 blur-3xl' />
-          <div className='absolute inset-0 bg-[linear-gradient(165deg,transparent,rgba(255,255,255,0.2),transparent)]' />
-        </div>
+        <div className='pointer-events-none fixed inset-0 -z-10' />
+
         <ToastViewport />
         <AnimatedRoutes />
         <BottomNav />

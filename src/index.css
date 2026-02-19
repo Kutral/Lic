@@ -1,53 +1,70 @@
 @import "tailwindcss";
 
 :root {
-  --bg-primary: #f6f8fc;
-  --bg-secondary: #eef3fb;
-  --bg-elev-1: #ffffffc2;
-  --bg-elev-2: #ffffffde;
-  --bg-elev-3: #f8fbff;
-  --glass-soft: rgba(255, 255, 255, 0.56);
-  --glass-strong: rgba(255, 255, 255, 0.72);
-  --stroke-soft: rgba(23, 41, 71, 0.12);
-  --stroke-strong: rgba(23, 41, 71, 0.24);
-  --accent-blue: #0068ff;
-  --accent-blue-soft: #6aa2ff;
-  --accent-emerald: #12b886;
-  --accent-indigo: #4b4cc7;
-  --accent-champagne: #f0d39a;
-  --text-primary: #101828;
-  --text-secondary: #4b5567;
-  --text-tertiary: #76839b;
-  --shadow-soft: 0 8px 22px rgba(7, 25, 56, 0.08);
-  --shadow-float: 0 20px 46px rgba(7, 25, 56, 0.18);
-  --glow-blue: 0 0 0 1px rgba(0, 104, 255, 0.2), 0 14px 28px rgba(0, 104, 255, 0.24);
+  /* Apple System Colors (Light Mode) */
+  --bg-primary: #f2f2f7; /* System Grouped Background */
+  --bg-secondary: #ffffff; /* System Background */
+  --bg-elev-1: #ffffff;
+  --bg-elev-2: #ffffff;
+  --bg-elev-3: #f2f2f7;
+  
+  /* Glass effects - drastically reduced for performance */
+  --glass-soft: rgba(255, 255, 255, 0.85);
+  --glass-strong: rgba(255, 255, 255, 0.95);
+  
+  /* Borders & Separators */
+  --stroke-soft: rgba(60, 60, 67, 0.12); /* Separator */
+  --stroke-strong: rgba(60, 60, 67, 0.36);
+  
+  /* Apple System Tints */
+  --accent-blue: #007aff;
+  --accent-blue-soft: #60a5fa;
+  --accent-emerald: #34c759;
+  --accent-indigo: #5856d6;
+  --accent-champagne: #ff9500; /* Using System Orange */
+  
+  /* Text */
+  --text-primary: #000000;
+  --text-secondary: #3c3c4399; /* Label Color */
+  --text-tertiary: #3c3c434d; /* Quarter Label Color */
+  
+  /* Shadows - Diffuse & Ambient */
+  --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-float: 0 8px 16px rgba(0, 0, 0, 0.08); /* Reduced spread */
+  --glow-blue: 0 0 0 1px rgba(0, 122, 255, 0.3);
 }
 
 :root[data-theme='dark'] {
-  --bg-primary: #070c16;
-  --bg-secondary: #10182a;
-  --bg-elev-1: rgba(17, 26, 43, 0.72);
-  --bg-elev-2: rgba(20, 32, 54, 0.86);
-  --bg-elev-3: #15243c;
-  --glass-soft: rgba(20, 33, 56, 0.6);
-  --glass-strong: rgba(21, 36, 61, 0.74);
-  --stroke-soft: rgba(179, 205, 255, 0.16);
-  --stroke-strong: rgba(179, 205, 255, 0.3);
-  --accent-blue: #5b9dff;
-  --accent-blue-soft: #8bb7ff;
-  --accent-emerald: #3cd6ac;
-  --accent-indigo: #8183ff;
-  --accent-champagne: #e8c98f;
-  --text-primary: #f6f8ff;
-  --text-secondary: #c5cee0;
-  --text-tertiary: #95a4bf;
-  --shadow-soft: 0 10px 24px rgba(0, 0, 0, 0.35);
-  --shadow-float: 0 22px 48px rgba(0, 0, 0, 0.55);
-  --glow-blue: 0 0 0 1px rgba(91, 157, 255, 0.26), 0 16px 32px rgba(91, 157, 255, 0.3);
+  /* Apple System Colors (Dark Mode) */
+  --bg-primary: #000000;
+  --bg-secondary: #1c1c1e;
+  --bg-elev-1: #1c1c1e;
+  --bg-elev-2: #2c2c2e;
+  --bg-elev-3: #3a3a3c;
+  
+  --glass-soft: rgba(30, 30, 30, 0.85);
+  --glass-strong: rgba(44, 44, 46, 0.95);
+  
+  --stroke-soft: rgba(84, 84, 88, 0.36);
+  --stroke-strong: rgba(84, 84, 88, 0.6);
+  
+  --accent-blue: #0a84ff;
+  --accent-blue-soft: #5ac8fa;
+  --accent-emerald: #30d158;
+  --accent-indigo: #5e5ce6;
+  --accent-champagne: #ff9f0a;
+  
+  --text-primary: #ffffff;
+  --text-secondary: #ebebf599;
+  --text-tertiary: #ebebf54d;
+  
+  --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --shadow-float: 0 8px 24px rgba(0, 0, 0, 0.4);
 }
 
 * {
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
 }
 
 html,
@@ -58,12 +75,10 @@ body,
 
 body {
   margin: 0;
-  font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   color: var(--text-primary);
-  background: radial-gradient(circle at 5% 0%, rgba(79, 128, 255, 0.24), transparent 36%),
-    radial-gradient(circle at 90% 10%, rgba(18, 184, 134, 0.14), transparent 32%),
-    linear-gradient(160deg, var(--bg-secondary), var(--bg-primary));
-  background-attachment: fixed;
+  background-color: var(--bg-primary);
+  /* Removed expensive gradients for low-end device performance */
 }
 
 a {
@@ -78,35 +93,33 @@ textarea {
   font: inherit;
 }
 
+/* Optimized Glass Panel - Fallback for low-end */
 .glass-panel {
-  background: linear-gradient(145deg, var(--glass-strong), var(--glass-soft));
+  background: var(--bg-elev-1); /* Solid fallback */
   border: 1px solid var(--stroke-soft);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
   box-shadow: var(--shadow-soft);
 }
 
-.gradient-text {
-  background: linear-gradient(110deg, var(--accent-blue), var(--accent-indigo), var(--accent-emerald));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+/* Apply backdrop-filter only if supported and GPU can likely handle it */
+@supports ((-webkit-backdrop-filter: blur(20px)) or (backdrop-filter: blur(20px))) {
+  .glass-panel {
+    background: var(--glass-soft);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
 }
 
-.grid-noise::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(rgba(255, 255, 255, 0.12) 0.6px, transparent 0.6px);
-  background-size: 3px 3px;
-  opacity: 0.2;
-  pointer-events: none;
+.gradient-text {
+  /* Simplified gradient for performance */
+  color: var(--accent-blue);
 }
+
+/* Removed grid-noise for performance */
 
 @keyframes riseIn {
   from {
     opacity: 0;
-    transform: translateY(14px);
+    transform: translateY(8px); /* Reduced distance */
   }
   to {
     opacity: 1;
@@ -114,19 +127,9 @@ textarea {
   }
 }
 
-@keyframes pulseGlow {
-  0%,
-  100% {
-    box-shadow: var(--shadow-soft);
-  }
-  50% {
-    box-shadow: var(--glow-blue);
-  }
-}
-
 @media (max-width: 640px) {
   body {
-    background-size: 180% 180%;
+    /* Optimization */
   }
 }
 

@@ -8,17 +8,17 @@ interface CardProps extends PropsWithChildren {
 }
 
 export const Card = ({ children, className, variant = 'glass', glow = false }: CardProps) => (
-  <section
+  <div
     className={clsx(
-      'relative overflow-hidden rounded-[24px] border p-4 md:p-5',
-      variant === 'glass' && 'glass-panel',
-      variant === 'solid' && 'bg-[var(--bg-elev-3)] border-[var(--stroke-soft)] shadow-[var(--shadow-soft)]',
-      variant === 'metric' && 'glass-panel bg-[linear-gradient(150deg,var(--glass-strong),rgba(106,162,255,0.18))]',
-      variant === 'interactive' && 'glass-panel transition duration-300 hover:-translate-y-0.5 hover:shadow-[var(--shadow-float)]',
-      glow && 'animate-[pulseGlow_4s_ease-in-out_infinite]',
+      'relative overflow-hidden rounded-[20px] p-4 transition-all duration-200',
+      variant === 'glass' && 'bg-[var(--bg-elev-1)] border border-[var(--stroke-soft)]',
+      variant === 'solid' && 'bg-[var(--bg-elev-2)]',
+      variant === 'metric' && 'bg-[var(--bg-elev-1)] border border-[var(--stroke-soft)]',
+      variant === 'interactive' && 'bg-[var(--bg-elev-1)] border border-[var(--stroke-soft)] active:scale-[0.98] active:bg-[var(--bg-elev-2)]',
+      glow && 'border-[var(--accent-blue-soft)] shadow-[var(--shadow-soft)]', // Static glow instead of animation
       className,
     )}
   >
     {children}
-  </section>
+  </div>
 )

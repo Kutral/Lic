@@ -1,4 +1,5 @@
 ﻿import type { LICPlan, PlanType } from '../types'
+import { officialEligibilityByPlanNo, officialEligibilityMeta } from './officialEligibility'
 
 const modeRebates = {
   yearly: 0.02,
@@ -175,7 +176,7 @@ const mkPlan = (input: {
   }
 }
 
-export const plans: LICPlan[] = [
+const basePlans: LICPlan[] = [
   mkPlan({ planNo: 717, name: "LIC's Single Premium Endowment Plan", type: 'endowment', versionTag: '512N283V03', description: 'Single premium endowment plan.', features: ['Single premium', 'Savings + life cover'], sourceRefs: ['https://licindia.in/insurance-plan', 'https://licindia.in/web/guest/lic-s-single-premium-endowment-plan-717-512n283v03'] }),
   mkPlan({ planNo: 714, name: "LIC's New Endowment Plan", type: 'endowment', versionTag: '512N277V03', description: 'Participating endowment savings plan.', features: ['Participating', 'Life cover + maturity'], sourceRefs: ['https://licindia.in/insurance-plan'] }),
   mkPlan({ planNo: 715, name: "LIC's New Jeevan Anand", type: 'endowment', versionTag: '512N279V03', description: 'Endowment with lifelong protection continuation.', features: ['Endowment + whole-life continuation'], sourceRefs: ['https://licindia.in/insurance-plan'] }),
@@ -221,6 +222,28 @@ export const plans: LICPlan[] = [
   mkPlan({ planNo: 880, name: "LIC's Jan Suraksha", type: 'micro', versionTag: '512N388V01', description: 'Micro insurance protection plan.', features: ['Micro insurance', 'Protection'], sourceRefs: ['https://licindia.in/micro-insurance-plans'] }),
 ]
 
+export const plans: LICPlan[] = basePlans.map((plan) => {
+  const official = officialEligibilityByPlanNo.get(plan.planNo)
+  if (!official) return plan
+
+  return {
+    ...plan,
+    uin: official.uin,
+    officialCategory: official.category,
+    entryAgeBasis: official.entryAgeBasis,
+    maturityAgeBasis: official.maturityAgeBasis,
+    allowedTerms: official.allowedTerms,
+    allowedPPT: official.allowedPPT,
+    modes: official.modes ?? plan.modes,
+    sourceDoc: official.sourceDoc,
+    minAge: official.minEntryAge,
+    maxAge: official.maxEntryAge,
+    minSA: official.minSA ?? plan.minSA,
+    maxSA: typeof official.maxSA === 'number' ? official.maxSA : plan.maxSA,
+    lastVerified: officialEligibilityMeta.lastVerifiedDate,
+  }
+})
+
 export const planMap = new Map(plans.map((plan) => [plan.planNo, plan]))
 
 export const planCategories = [
@@ -233,3 +256,4 @@ export const planCategories = [
   { value: 'ulip', label: 'ULIP' },
   { value: 'micro', label: 'Micro' },
 ] as const
+
