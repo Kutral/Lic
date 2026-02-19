@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom'
-import { Calculator, Home, MessageSquareText, Settings, Sparkles } from 'lucide-react'
+import { Calculator, Home, MessageSquareText, Settings } from 'lucide-react'
 import { clsx } from 'clsx'
 
 const navItems = [

@@ -9,7 +9,7 @@ const riderRatesPerThousand = {
   pwb: 0.9,
 }
 
-import { planRates, type RateTable } from '../data/rates'
+import { planRates } from '../data/rates'
 
 const interpolate = (x: number, x1: number, y1: number, x2: number, y2: number): number => {
   if (x2 === x1) return y1
